@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +11,8 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_picture'
     ];
 
     /**
@@ -42,4 +44,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // Relationship to Doctor
+    public function doctor(){
+        return $this->hasOne(Doctor::class, 'user_id');
+    }
+
+    // Relationship to Pharmacist
+    public function pharmacist(){
+        return $this->hasOne(Pharmacist::class, 'user_id');
+    }
+
+    // Relationship to Receptionist
+    public function receptionist(){
+        return $this->hasOne(Receptionist::class, 'user_id');
+    }
 }
